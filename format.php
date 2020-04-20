@@ -193,7 +193,16 @@ class qformat_wordtable extends qformat_xml {
                             $imagemimetype .= "jpeg";
                         }
                         if ($imagesuffix == 'wmf') {
-                            $imagemimetype .= "x-wmf";
+                            // TNMU: Moodle does not support WMF! So, convert WMF to JPG (ImageMagick required!)
+                            //$imagemimetype .= "x-wmf";
+                            $image = new Imagick();
+                            $image->setresolution(300, 300);
+                            $image->readImageBlob($imagedata);
+                            $image->resizeImage(1500,0,Imagick::FILTER_LANCZOS,1);
+                            $image->setImageFormat('jpg');
+                            $imagedata = $image->getImagesBlob();
+                            $imagesuffix = 'jpeg';
+                            $imagemimetype .= "jpeg";
                         }
                         // Handle recognised Internet formats only.
                         if ($imagemimetype != '') {
@@ -558,7 +567,7 @@ class qformat_wordtable extends qformat_xml {
         }
         // Add 'Select missing word' question type (not the Missing Word format), added to core in 2.9, downloadable before then.
         if (is_object(question_bank::get_qtype('gapselect', false))) {
-            $textstrings['qtype_gapselect'] = array('pluginnamesummary', 'errornoslots', 'group', 'shuffle');
+            $textstrings['qtype_gapselect'] = array('pluginnamesummary', 'group', 'shuffle');
         }
         // Add 'Drag and drop onto image' question type, added to core in 2.9, downloadable before then.
         if (is_object(question_bank::get_qtype('ddimageortext', false))) {
