@@ -196,9 +196,9 @@ class qformat_wordtable extends qformat_xml {
                             // TNMU: Moodle does not support WMF! So, convert WMF to JPG (ImageMagick required!)
                             //$imagemimetype .= "x-wmf";
                             $image = new Imagick();
-                            $image->setresolution(300, 300);
+                            $image->setresolution(150, 150);
                             $image->readImageBlob($imagedata);
-                            $image->resizeImage(1500,0,Imagick::FILTER_LANCZOS,1);
+                            //$image->resizeImage(1500,0,Imagick::FILTER_LANCZOS,1);
                             $image->setImageFormat('jpg');
                             $imagedata = $image->getImagesBlob();
                             $imagesuffix = 'jpeg';
