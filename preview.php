@@ -32,6 +32,7 @@ global $OUTPUT, $DB;
 // Declare empty array to prevent each debug message from including a complete backtrace.
 $backtrace = array();
 
+require_login();
 // Get the assigned temporary question name.
 $qname = required_param('qname', PARAM_TEXT);
 // Get the course id.
@@ -43,9 +44,7 @@ if (($question = $DB->get_record('question', array('name' => $qname)))) {
     // Figure out the proper URL, allowing for an installation in a subfolder.
     $moodlerootfolderpath = parse_url($CFG->wwwroot, PHP_URL_PATH);
     $redirecturl = $moodlerootfolderpath . "/question/preview.php?id=" . $question->id . "&courseid=" . $courseid;
-    debugging("Preview question: Redirecting to $redirecturl", DEBUG_DEVELOPER, $backtrace);
     redirect($redirecturl);
 } else {   // No question found, report an error message so the reader isn't looking at a blank screen.
-    debugging("Preview question: No question found", DEBUG_DEVELOPER, $backtrace);
     echo $OUTPUT->notification(get_string('preview_question_not_found', 'qformat_wordtable', $qname . " / " . $courseid));
 }
